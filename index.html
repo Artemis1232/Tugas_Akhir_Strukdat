@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Sim Life - Simulator Kehidupan Modern</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Warna Gradient Modern */
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            
+            /* Glass Morphism */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            
+            /* Tema Gelap */
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1c;
+            --card-bg: #1e293b;
+            --card-light: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-danger: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            --gradient-warning: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-vibrant: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            
+            /* Bayangan */
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.25);
+            --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.5);
+            
+            /* Transisi */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 30%);
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Kartu Glass Modern */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition-normal);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Tombol Modern */
+        .modern-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-normal);
+        }
+
+        .modern-btn:hover::before {
+            left: 100%;
+        }
+
+        .modern-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modern-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-success { background: var(--gradient-success); }
+        .btn-danger { background: var(--gradient-danger); }
+        .btn-warning { background: var(--gradient-warning); }
+        .btn-info { background: var(--gradient-info); }
+        .btn-vibrant { background: var(--gradient-vibrant); color: #333; }
+        .btn-secondary { background: var(--card-light); }
+
+        /* Progress Ring */
+        .progress-ring {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-ring-bg {
+            stroke: var(--card-light);
+        }
+
+        .progress-ring-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Kartu Statistik */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition-normal);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-info .value {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .stat-info .subtext {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Input Modern */
+        .modern-input {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-normal);
+            width: 100%;
+        }
+
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .modern-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Kartu Pekerjaan */
+        .job-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .job-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(99, 102, 241, 0.1) 100%);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .job-emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .job-name {
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .job-age {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .job-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            margin-top: 10px;
+            transition: var(--transition-normal);
+        }
+
+        .job-card.selected .job-indicator {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Kartu NPC */
+        .npc-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .npc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .npc-emoji {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .npc-name {
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .npc-role {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .npc-relationship {
+            width: 100%;
+            height: 6px;
+            background: var(--card-light);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .npc-relationship-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .npc-relationship-value {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Layout Layar Game */
+        .game-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Daftar Aktivitas */
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .activity-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition-normal);
+            border: 1px solid var(--border);
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        .activity-icon {
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-xl);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--card-light);
+            color: var(--text-primary);
+        }
+
+        /* Responsif */
+        @media (max-width: 1024px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .modal-content {
+                padding: 25px;
+            }
+        }
+
+        /* Styling Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--card-bg);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
+        /* Animasi Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Efek Partikel */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Badge Prestasi */
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gradient-warning);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        /* Counter Hari */
+        .day-counter {
+            background: var(--gradient-info);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Indikator Status */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-alive {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .status-dead {
+            background: var(--gradient-danger);
+            color: white;
+        }
+        
+        /* Pesan Notifikasi */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Tombol kecil untuk aksi riwayat */
+        .history-action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
+        .history-action-btn:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Partikel -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Kontainer Utama -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>🌟 SIM LIFE</h1>
+                    <p>Simulator Kehidupan Modern</p>
+                </div>
+            </div>
+            <div id="header-controls"></div>
+        </header>
+
+        <!-- Konten Utama (akan dimuat secara dinamis) -->
+        <main id="main-content"></main>
+    </div>
+
+    <!-- Modal Pembuatan Karakter -->
+    <div class="modal" id="character-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-user-plus"></i> Buat Karakter</h2>
+                <button class="close-modal" onclick="closeModal('character-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 10px; color: var(--text-secondary);">
+                        <i class="fas fa-user"></i> Nama Karakter
+                    </label>
+                    <input type="text" class="modern-input" id="character-name" placeholder="Masukkan nama karakter Anda">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 10px; color: var(--text-secondary);">
+                        <i class="fas fa-birthday-cake"></i> Usia: <span id="age-value">20</span> tahun
+                    </label>
+                    <input type="range" class="modern-input" id="age-slider" min="1" max="100" value="20" 
+                           style="width: 100%; padding: 0;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 30px;">
+                    <label style="display: block; margin-bottom: 15px; color: var(--text-secondary);">
+                        <i class="fas fa-briefcase"></i> Pilih Pekerjaan
+                    </label>
+                    <div class="jobs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;" id="jobs-grid">
+                        <!-- Pekerjaan akan dimuat secara dinamis -->
+                    </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 15px; justify-content: flex-end;">
+                    <button class="modern-btn btn-secondary" onclick="closeModal('character-modal')">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </button>
+                    <button class="modern-btn btn-success" onclick="createCharacter()">
+                        <i class="fas fa-rocket"></i> Buat & Mulai
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aktivitas -->
+    <div class="modal" id="activities-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-plus-circle"></i> Tambah Aktivitas</h2>
+                <button class="close-modal" onclick="closeModal('activities-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="activities-list" style="display: grid; gap: 15px;">
+                    <!-- Aktivitas akan dimuat secara dinamis -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Interaksi NPC -->
+    <div class="modal" id="npc-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-users"></i> Interaksi dengan NPC</h2>
+                <button class="close-modal" onclick="closeModal('npc-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="npc-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                    <!-- NPC akan dimuat secara dinamis -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat -->
+    <div class="modal" id="history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-history"></i> Riwayat Permainan</h2>
+                <button class="close-modal" onclick="closeModal('history-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                    <button class="modern-btn btn-danger btn-sm" onclick="confirmClearHistory()">
+                        <i class="fas fa-trash"></i> Hapus Semua Riwayat
+                    </button>
+                </div>
+                <div id="history-content" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                    <!-- Riwayat akan dimuat secara dinamis -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Profil -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-user-circle"></i> Profil Karakter</h2>
+                <button class="close-modal" onclick="closeModal('profile-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="profile-content">
+                    <!-- Profil akan dimuat secara dinamis -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Data Game - DITAMBAHKAN: snapshot untuk reset hari
+        const gameData = {
+            character: null,
+            currentDay: 1,
+            isAlive: true,
+            activitiesToday: [],
+            history: [],
+            previousDaySnapshot: null, // Menyimpan snapshot hari sebelumnya untuk reset
+            maxActivitiesPerDay: 5,
+            npcs: [
+                { name: "Ayah", relationship: 70, role: "Keluarga", emoji: "👨‍👦", color: "#6366f1" },
+                { name: "Ibu", relationship: 80, role: "Keluarga", emoji: "👩‍👧", color: "#ec4899" },
+                { name: "Adik", relationship: 60, role: "Keluarga", emoji: "👶", color: "#10b981" },
+                { name: "Kakak", relationship: 65, role: "Keluarga", emoji: "👧", color: "#f59e0b" },
+                { name: "Guru", relationship: 30, role: "Pendidikan", emoji: "👨‍🏫", color: "#3b82f6" },
+                { name: "Teman", relationship: 50, role: "Pertemanan", emoji: "👥", color: "#8b5cf6" },
+                { name: "Tetangga", relationship: 40, role: "Lingkungan", emoji: "🏘️", color: "#06b6d4" },
+                { name: "Sahabat", relationship: 55, role: "Pertemanan", emoji: "🤝", color: "#84cc16" },
+                { name: "Atasan", relationship: 30, role: "Pekerjaan", emoji: "💼", color: "#ef4444" },
+                { name: "Gebetan", relationship: 25, role: "Hubungan", emoji: "💖", color: "#f43f5e" }
+            ],
+            jobs: [
+                { 
+                    id: "pelajar",
+                    name: "Pelajar", 
+                    emoji: "🎓", 
+                    displayName: "🎓 Pelajar",
+                    color: "#3b82f6", 
+                    minAge: 6, 
+                    maxAge: 18, 
+                    activities: ["Belajar", "Olahraga", "Jalan-jalan", "Mengerjakan PR"] 
+                },
+                { 
+                    id: "mahasiswa",
+                    name: "Mahasiswa", 
+                    emoji: "🎓", 
+                    displayName: "🎓 Mahasiswa",
+                    color: "#8b5cf6", 
+                    minAge: 17, 
+                    maxAge: 25, 
+                    activities: ["Belajar", "Bekerja Part-time", "Jalan-jalan", "Organisasi"] 
+                },
+                { 
+                    id: "guru",
+                    name: "Guru", 
+                    emoji: "👨‍🏫", 
+                    displayName: "👨‍🏫 Guru",
+                    color: "#10b981", 
+                    minAge: 23, 
+                    maxAge: 100, 
+                    activities: ["Mengajar", "Mempersiapkan Materi", "Evaluasi", "Rapat"] 
+                },
+                { 
+                    id: "chef",
+                    name: "Chef", 
+                    emoji: "👨‍🍳", 
+                    displayName: "👨‍🍳 Chef",
+                    color: "#ef4444", 
+                    minAge: 18, 
+                    maxAge: 100, 
+                    activities: ["Masak", "Belanja Bahan", "Riset Menu", "Pelatihan"] 
+                },
+                { 
+                    id: "pilot",
+                    name: "Pilot", 
+                    emoji: "✈️", 
+                    displayName: "✈️ Pilot",
+                    color: "#6366f1", 
+                    minAge: 22, 
+                    maxAge: 100, 
+                    activities: ["Menerbangkan Pesawat", "Briefing", "Simulasi", "Olahraga"] 
+                },
+                { 
+                    id: "dokter",
+                    name: "Dokter", 
+                    emoji: "👨‍⚕️", 
+                    displayName: "👨‍⚕️ Dokter",
+                    color: "#ec4899", 
+                    minAge: 25, 
+                    maxAge: 100, 
+                    activities: ["Praktek", "Cek Pasien", "Operasi", "Penelitian"] 
+                },
+                { 
+                    id: "polisi",
+                    name: "Polisi", 
+                    emoji: "👮", 
+                    displayName: "👮 Polisi",
+                    color: "#1f2937", 
+                    minAge: 18, 
+                    maxAge: 100, 
+                    activities: ["Patroli", "Laporan", "Latihan", "Pengawasan"] 
+                },
+                { 
+                    id: "programmer",
+                    name: "Programmer", 
+                    emoji: "💻", 
+                    displayName: "💻 Programmer",
+                    color: "#06b6d4", 
+                    minAge: 18, 
+                    maxAge: 100, 
+                    activities: ["Coding", "Debugging", "Meeting", "Riset Teknologi"] 
+                }
+            ],
+            events: [
+                { text: "☄️ Terkena METEOR! Tidak selamat", effect: "death" },
+                { text: "🌧️ Hujan deras, energi berkurang", effect: "energy:-10" },
+                { text: "💰 DAPAT DISKON MEGA! Hemat uang", effect: "money:+10" },
+                { text: "🚗 KECELAKAAN! Energi habis", effect: "energy:-20,health:-20" },
+                { text: "🌟 MOTIVASI MENINGKAT! Semangat naik", effect: "energy:+5,knowledge:+2" },
+                { text: "📧 TUGAS MENDADAK! Tetap semangat", effect: "knowledge:+3,energy:-3" },
+                { text: "🎁 DAPAT REJEKI NOMPLOK! Hadiah tak terduga", effect: "money:+15,energy:+5" },
+                { text: "🤒 FLU MUSIMAN! Butuh istirahat", effect: "health:-5,energy:-3" },
+                { text: "🏆 JUARA LOMBA! Prestasi gemilang", effect: "money:+25,knowledge:+3" },
+                { text: "🌞 CUACA CERAH! Mood membaik", effect: "energy:+3,health:+2" },
+                { text: "📱 TEMAN MENGAJAK HANGOUT", effect: "energy:+4,money:-10" },
+                { text: "🏥 CHECKUP GRATIS! Kesehatan terjaga", effect: "health:+8" },
+                { text: "💼 PROYEK BARU! Penghasilan tambahan", effect: "money:+20,energy:-6" },
+                { text: "📚 BUKU BARU! Pengetahuan bertambah", effect: "knowledge:+4" }
+            ],
+            activityEffects: {
+                "Belajar": { knowledge: 5, energy: -5 },
+                "Bekerja Part-time": { money: 20, energy: -10 },
+                "Olahraga": { health: 5, energy: -5 },
+                "Istirahat": { energy: 10 },
+                "Masak": { money: 15, energy: -7 },
+                "Menerbangkan Pesawat": { money: 30, energy: -15 },
+                "Mengajar": { money: 25, knowledge: 2, energy: -8 },
+                "Patroli": { money: 20, health: -5, energy: -10 },
+                "Praktek": { money: 35, knowledge: 3, energy: -12 },
+                "Makan": { energy: 15, money: -5 },
+                "Jalan-jalan": { health: 5, energy: -5, money: -5 },
+                "Mengerjakan PR": { knowledge: 3, energy: -4 },
+                "Organisasi": { knowledge: 2, energy: -6 },
+                "Evaluasi": { knowledge: 1, energy: -5 },
+                "Rapat": { knowledge: 2, energy: -8 },
+                "Belanja Bahan": { money: -10, energy: -3 },
+                "Riset Menu": { knowledge: 3, energy: -4 },
+                "Pelatihan": { knowledge: 4, energy: -6 },
+                "Briefing": { knowledge: 2, energy: -3 },
+                "Simulasi": { knowledge: 4, energy: -7 },
+                "Cek Pasien": { knowledge: 2, energy: -5 },
+                "Operasi": { knowledge: 5, energy: -15 },
+                "Penelitian": { knowledge: 6, energy: -8 },
+                "Latihan": { health: 3, energy: -6 },
+                "Pengawasan": { knowledge: 1, energy: -4 },
+                "Coding": { knowledge: 6, money: 25, energy: -12 },
+                "Debugging": { knowledge: 4, energy: -8 },
+                "Meeting": { knowledge: 1, energy: -5 },
+                "Riset Teknologi": { knowledge: 5, energy: -7 }
+            },
+            npcEffects: {
+                "Ayah": { money: 25, energy: 5 },
+                "Ibu": { health: 8, energy: 8 },
+                "Adik": { energy: 5, knowledge: 1 },
+                "Kakak": { knowledge: 4, money: 10 },
+                "Guru": { knowledge: 6 },
+                "Teman": { energy: 5, health: 2 },
+                "Tetangga": { health: 4, energy: 3 },
+                "Sahabat": { energy: 7, health: 4 },
+                "Atasan": { money: 10, knowledge: 2 },
+                "Gebetan": { energy: 6, health: 3 }
+            }
+        };
+
+        // Pekerjaan yang dipilih
+        let selectedJob = null;
+
+        // Inisialisasi game
+        function initGame() {
+            createParticles();
+            showWelcomeScreen();
+            
+            // Event slider usia
+            document.getElementById('age-slider').addEventListener('input', function(e) {
+                document.getElementById('age-value').textContent = e.target.value;
+            });
+        }
+
+        // Buat partikel melayang
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 3 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Fungsi modal
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Manajemen layar
+        function showWelcomeScreen() {
+            const mainContent = document.getElementById('main-content');
+            const headerControls = document.getElementById('header-controls');
+            
+            headerControls.innerHTML = '';
+            
+            mainContent.innerHTML = `
+                <div class="glass-card" style="padding: 60px 40px; text-align: center; margin: 20px auto; max-width: 800px;">
+                    <div style="font-size: 64px; margin-bottom: 30px;">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h1 style="font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; margin-bottom: 20px; background: linear-gradient(135deg, #667eea, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        🌟 SIM LIFE
+                    </h1>
+                    <p style="font-size: 20px; color: var(--text-secondary); margin-bottom: 40px;">
+                        Simulator Kehidupan Modern - Ciptakan ceritamu!
+                    </p>
+                    
+                    ${gameData.character ? `
+                        <div class="glass-card" style="padding: 25px; margin-bottom: 40px; display: inline-block;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="font-size: 32px;">${gameData.character.jobEmoji}</div>
+                                <div>
+                                    <h3 style="font-size: 20px; color: var(--text-primary);">${gameData.character.name}</h3>
+                                    <p style="color: var(--text-muted);">${gameData.character.job} • Hari ${gameData.currentDay}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="glass-card" style="padding: 25px; margin-bottom: 40px; display: inline-block;">
+                            <p style="color: var(--text-muted);">
+                                <i class="fas fa-rocket"></i> Siap untuk petualangan? Buat karaktermu!
+                            </p>
+                        </div>
+                    `}
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px;">
+                        <button class="modern-btn btn-vibrant" onclick="showCharacterModal()">
+                            <i class="fas fa-user-plus"></i> BUAT KARAKTER
+                        </button>
+                        ${gameData.character ? `
+                            <button class="modern-btn btn-success" onclick="showGameScreen()">
+                                <i class="fas fa-play"></i> LANJUTKAN
+                            </button>
+                            <button class="modern-btn btn-info" onclick="showProfile()">
+                                <i class="fas fa-user"></i> LIHAT PROFIL
+                            </button>
+                            <button class="modern-btn btn-warning" onclick="showHistory()">
+                                <i class="fas fa-history"></i> RIWAYAT
+                            </button>
+                        ` : ''}
+                        <button class="modern-btn btn-danger" onclick="quickStart()">
+                            <i class="fas fa-bolt"></i> MULAI CEPAT
+                        </button>
+                        <button class="modern-btn btn-secondary" onclick="showInstructions()">
+                            <i class="fas fa-question-circle"></i> PANDUAN
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 40px; color: var(--text-muted); font-size: 14px;">
+                        <p><i class="fas fa-code"></i> Versi Web • v2.1 • UI Modern • Fitur Reset & Hapus Riwayat</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showGameScreen() {
+            if (!gameData.character) {
+                showWelcomeScreen();
+                return;
+            }
+
+            const headerControls = document.getElementById('header-controls');
+            headerControls.innerHTML = `
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="day-counter">
+                        <i class="fas fa-calendar-alt"></i> HARI ${gameData.currentDay}
+                    </div>
+                    <div class="status-indicator ${gameData.isAlive ? 'status-alive' : 'status-dead'}">
+                        <i class="fas fa-heart"></i> ${gameData.isAlive ? 'HIDUP' : 'MENINGGAL'}
+                    </div>
+                </div>
+            `;
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="game-container">
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <div class="glass-card" style="padding: 25px;">
+                            <h2 style="font-family: 'Poppins', sans-serif; font-size: 20px; margin-bottom: 20px; color: var(--text-primary);">
+                                <i class="fas fa-chart-bar"></i> STATISTIK
+                            </h2>
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: var(--gradient-primary);">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>ENERGI</h3>
+                                        <div class="value">${gameData.character.energy}/100</div>
+                                        <div class="progress" style="width: 100%; height: 6px; background: var(--card-light); border-radius: 3px; margin-top: 5px; overflow: hidden;">
+                                            <div style="width: ${gameData.character.energy}%; height: 100%; background: var(--gradient-primary); border-radius: 3px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: var(--gradient-success);">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>KESEHATAN</h3>
+                                        <div class="value">${gameData.character.health}/100</div>
+                                        <div class="progress" style="width: 100%; height: 6px; background: var(--card-light); border-radius: 3px; margin-top: 5px; overflow: hidden;">
+                                            <div style="width: ${gameData.character.health}%; height: 100%; background: var(--gradient-success); border-radius: 3px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: var(--gradient-warning);">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>UANG</h3>
+                                        <div class="value">Rp${gameData.character.money}K</div>
+                                        <div class="subtext">Terus hasilkan!</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: var(--gradient-info);">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3>PENGETAHUAN</h3>
+                                        <div class="value">${gameData.character.knowledge}</div>
+                                        <div class="subtext">Terus belajar!</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card" style="padding: 25px;">
+                            <h2 style="font-family: 'Poppins', sans-serif; font-size: 20px; margin-bottom: 20px; color: var(--text-primary);">
+                                <i class="fas fa-bolt"></i> AKSI CEPAT
+                            </h2>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <button class="modern-btn btn-success" onclick="runDay()">
+                                    <i class="fas fa-play"></i> JALANKAN HARI
+                                </button>
+                                <button class="modern-btn btn-info" onclick="runNDays()">
+                                    <i class="fas fa-calendar"></i> JALANKAN N HARI
+                                </button>
+                                <button class="modern-btn" onclick="showActivitiesModal()">
+                                    <i class="fas fa-plus"></i> TAMBAH AKTIVITAS
+                                </button>
+                                <button class="modern-btn btn-vibrant" onclick="showNpcModal()">
+                                    <i class="fas fa-users"></i> INTERAKSI NPC
+                                </button>
+                                <button class="modern-btn btn-warning" onclick="showHistory()">
+                                    <i class="fas fa-history"></i> LIHAT RIWAYAT
+                                </button>
+                                <button class="modern-btn btn-secondary" onclick="resetDay(true)">
+                                    <i class="fas fa-redo"></i> RESET HARI
+                                </button>
+                                <button class="modern-btn btn-secondary" onclick="showWelcomeScreen()">
+                                    <i class="fas fa-home"></i> MENU UTAMA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Konten Utama -->
+                    <div class="main-content">
+                        <div class="glass-card" style="padding: 30px;">
+                            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px;">
+                                <div style="font-size: 40px;">${gameData.character.jobEmoji}</div>
+                                <div>
+                                    <h1 style="font-family: 'Poppins', sans-serif; font-size: 28px; color: var(--text-primary);">
+                                        Selamat datang, ${gameData.character.name}!
+                                    </h1>
+                                    <p style="color: var(--text-muted);">
+                                        ${gameData.character.job}, ${gameData.character.age} tahun • Hari ${gameData.currentDay}
+                                    </p>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px;">
+                                <i class="fas fa-lightbulb"></i> Tip: Tambah aktivitas dan interaksi dengan NPC untuk kemajuan dalam perjalananmu!
+                            </p>
+                            <p style="color: var(--text-muted); font-size: 14px;">
+                                <i class="fas fa-info-circle"></i> Aktivitas hari ini: ${gameData.activitiesToday.length}/${gameData.maxActivitiesPerDay}
+                            </p>
+                        </div>
+                        
+                        <div class="glass-card" style="padding: 30px; flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                                <h2 style="font-family: 'Poppins', sans-serif; font-size: 22px; color: var(--text-primary);">
+                                    <i class="fas fa-tasks"></i> AKTIVITAS HARI INI
+                                </h2>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="modern-btn btn-sm" onclick="showActivitiesModal()">
+                                        <i class="fas fa-plus"></i> Tambah
+                                    </button>
+                                    ${gameData.activitiesToday.length > 0 ? `
+                                        <button class="modern-btn btn-danger btn-sm" onclick="resetDay(false)">
+                                            <i class="fas fa-times"></i> Hapus Semua
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="activities-list" id="activities-container">
+                                ${gameData.activitiesToday.length > 0 ? 
+                                    gameData.activitiesToday.map((activity, index) => `
+                                        <div class="activity-item">
+                                            <div class="activity-icon">
+                                                ${activity.startsWith('Interaksi:') ? '<i class="fas fa-users"></i>' : '<i class="fas fa-tasks"></i>'}
+                                            </div>
+                                            <div class="activity-text" style="flex: 1;">
+                                                ${activity.startsWith('Interaksi:') ? 
+                                                    `👥 Interaksi dengan ${activity.split(':')[1]}` : 
+                                                    `📝 ${activity}`
+                                                }
+                                            </div>
+                                            <button class="history-action-btn" onclick="removeActivity(${index})" title="Hapus aktivitas">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    `).join('') : 
+                                    '<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-tasks"></i><br>Belum ada aktivitas. Tambahkan beberapa!</div>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal Pembuatan Karakter
+        function showCharacterModal() {
+            const jobsGrid = document.getElementById('jobs-grid');
+            jobsGrid.innerHTML = '';
+            
+            gameData.jobs.forEach(job => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.dataset.jobId = job.id;
+                jobCard.innerHTML = `
+                    <div class="job-emoji">${job.emoji}</div>
+                    <div class="job-name">${job.name}</div>
+                    <div class="job-age">${job.minAge}-${job.maxAge} tahun</div>
+                    <div class="job-indicator"></div>
+                `;
+                
+                jobCard.addEventListener('click', () => selectJob(job));
+                jobsGrid.appendChild(jobCard);
+            });
+            
+            showModal('character-modal');
+        }
+
+        function selectJob(jobData) {
+            selectedJob = jobData;
+            
+            // Hapus kelas selected dari semua kartu
+            document.querySelectorAll('.job-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Tambah kelas selected ke kartu yang diklik
+            event.currentTarget.classList.add('selected');
+        }
+
+        function createCharacter() {
+            const name = document.getElementById('character-name').value.trim();
+            const age = parseInt(document.getElementById('age-slider').value);
+            
+            if (!name) {
+                showNotification('Masukkan nama karakter!', 'warning');
+                return;
+            }
+            
+            if (!selectedJob) {
+                showNotification('Pilih pekerjaan terlebih dahulu!', 'warning');
+                return;
+            }
+            
+            if (age < selectedJob.minAge || age > selectedJob.maxAge) {
+                showNotification(`Usia ${age} tahun tidak sesuai untuk ${selectedJob.name} (${selectedJob.minAge}-${selectedJob.maxAge} tahun)`, 'danger');
+                return;
+            }
+            
+            gameData.character = {
+                name: name,
+                age: age,
+                job: selectedJob.name,
+                jobEmoji: selectedJob.emoji,
+                jobId: selectedJob.id,
+                energy: 70,
+                health: 100,
+                money: 50,
+                knowledge: 40
+            };
+            
+            gameData.currentDay = 1;
+            gameData.isAlive = true;
+            gameData.activitiesToday = [];
+            gameData.history = [];
+            gameData.previousDaySnapshot = null;
+            
+            closeModal('character-modal');
+            showGameScreen();
+            
+            // Tampilkan notifikasi sukses
+            showNotification(`🎉 Karakter "${name}" berhasil dibuat!`, 'success');
+        }
+
+        // Mulai Cepat
+        function quickStart() {
+            gameData.character = {
+                name: "Pemain",
+                age: 20,
+                job: "Mahasiswa",
+                jobEmoji: "🎓",
+                jobId: "mahasiswa",
+                energy: 70,
+                health: 100,
+                money: 50,
+                knowledge: 40
+            };
+            
+            gameData.currentDay = 1;
+            gameData.isAlive = true;
+            gameData.activitiesToday = [];
+            gameData.history = [];
+            gameData.previousDaySnapshot = null;
+            
+            showGameScreen();
+            showNotification('🚀 Mulai Cepat! Karakter berhasil dibuat.', 'success');
+        }
+
+        // Modal Aktivitas
+        function showActivitiesModal() {
+            if (!gameData.isAlive) {
+                showNotification('Karakter telah meninggal!', 'danger');
+                return;
+            }
+            
+            if (gameData.activitiesToday.length >= gameData.maxActivitiesPerDay) {
+                showNotification(`⚠️ Maksimal ${gameData.maxActivitiesPerDay} aktivitas per hari!`, 'warning');
+                return;
+            }
+            
+            const activitiesList = document.getElementById('activities-list');
+            activitiesList.innerHTML = '';
+            
+            // Aktivitas berdasarkan pekerjaan
+            const currentJob = gameData.jobs.find(job => job.id === gameData.character.jobId);
+            if (currentJob) {
+                currentJob.activities.forEach(activity => {
+                    const btn = document.createElement('button');
+                    btn.className = 'modern-btn';
+                    btn.style.width = '100%';
+                    btn.innerHTML = `<i class="fas fa-tasks"></i> ${activity}`;
+                    btn.onclick = () => addActivity(activity);
+                    activitiesList.appendChild(btn);
+                });
+            }
+            
+            // Aktivitas umum
+            ['Istirahat', 'Makan', 'Jalan-jalan'].forEach(activity => {
+                const btn = document.createElement('button');
+                btn.className = 'modern-btn btn-success';
+                btn.style.width = '100%';
+                btn.innerHTML = `<i class="fas fa-star"></i> ${activity}`;
+                btn.onclick = () => addActivity(activity);
+                activitiesList.appendChild(btn);
+            });
+            
+            showModal('activities-modal');
+        }
+
+        function addActivity(activity) {
+            if (gameData.activitiesToday.length >= gameData.maxActivitiesPerDay) {
+                showNotification(`⚠️ Maksimal ${gameData.maxActivitiesPerDay} aktivitas per hari!`, 'warning');
+                closeModal('activities-modal');
+                return;
+            }
+            
+            gameData.activitiesToday.push(activity);
+            updateActivitiesDisplay();
+            closeModal('activities-modal');
+            showNotification(`✅ Ditambahkan: ${activity}`, 'success');
+        }
+
+        function removeActivity(index) {
+            if (index >= 0 && index < gameData.activitiesToday.length) {
+                const removedActivity = gameData.activitiesToday[index];
+                gameData.activitiesToday.splice(index, 1);
+                updateActivitiesDisplay();
+                showNotification(`🗑️ Dihapus: ${removedActivity}`, 'info');
+            }
+        }
+
+        function updateActivitiesDisplay() {
+            if (document.getElementById('activities-container')) {
+                const container = document.getElementById('activities-container');
+                container.innerHTML = gameData.activitiesToday.length > 0 ? 
+                    gameData.activitiesToday.map((activity, index) => `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                ${activity.startsWith('Interaksi:') ? '<i class="fas fa-users"></i>' : '<i class="fas fa-tasks"></i>'}
+                            </div>
+                            <div class="activity-text" style="flex: 1;">
+                                ${activity.startsWith('Interaksi:') ? 
+                                    `👥 Interaksi dengan ${activity.split(':')[1]}` : 
+                                    `📝 ${activity}`
+                                }
+                            </div>
+                            <button class="history-action-btn" onclick="removeActivity(${index})" title="Hapus aktivitas">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `).join('') : 
+                    '<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-tasks"></i><br>Belum ada aktivitas. Tambahkan beberapa!</div>';
+            }
+        }
+
+        // Modal NPC
+        function showNpcModal() {
+            if (!gameData.isAlive) {
+                showNotification('Karakter telah meninggal!', 'danger');
+                return;
+            }
+            
+            if (gameData.activitiesToday.length >= gameData.maxActivitiesPerDay) {
+                showNotification(`⚠️ Maksimal ${gameData.maxActivitiesPerDay} aktivitas per hari!`, 'warning');
+                return;
+            }
+            
+            const npcGrid = document.getElementById('npc-grid');
+            npcGrid.innerHTML = '';
+            
+            gameData.npcs.forEach(npc => {
+                const npcCard = document.createElement('div');
+                npcCard.className = 'npc-card';
+                npcCard.innerHTML = `
+                    <div class="npc-emoji">${npc.emoji}</div>
+                    <div class="npc-name">${npc.name}</div>
+                    <div class="npc-role">${npc.role}</div>
+                    <div class="npc-relationship">
+                        <div class="npc-relationship-fill" style="width: ${npc.relationship}%; background: ${npc.color};"></div>
+                    </div>
+                    <div class="npc-relationship-value">${npc.relationship}% hubungan</div>
+                `;
+                
+                npcCard.addEventListener('click', () => interactWithNpc(npc));
+                npcGrid.appendChild(npcCard);
+            });
+            
+            showModal('npc-modal');
+        }
+
+        function interactWithNpc(npc) {
+            if (gameData.activitiesToday.length >= gameData.maxActivitiesPerDay) {
+                showNotification(`⚠️ Maksimal ${gameData.maxActivitiesPerDay} aktivitas per hari!`, 'warning');
+                return;
+            }
+            
+            const activity = `Interaksi: ${npc.name}`;
+            gameData.activitiesToday.push(activity);
+            
+            // Tingkatkan hubungan
+            npc.relationship = Math.min(100, npc.relationship + 5);
+            
+            // Terapkan efek NPC
+            if (gameData.npcEffects[npc.name]) {
+                const effects = gameData.npcEffects[npc.name];
+                if (effects.money) gameData.character.money += effects.money;
+                if (effects.energy) gameData.character.energy = Math.min(100, gameData.character.energy + effects.energy);
+                if (effects.health) gameData.character.health = Math.min(100, gameData.character.health + effects.health);
+                if (effects.knowledge) gameData.character.knowledge += effects.knowledge;
+            }
+            
+            updateActivitiesDisplay();
+            closeModal('npc-modal');
+            showNotification(`💝 Berinteraksi dengan ${npc.name}! Hubungan: ${npc.relationship}%`, 'success');
+            
+            // Refresh layar game untuk menampilkan statistik terbaru
+            if (document.querySelector('.game-container')) {
+                showGameScreen();
+            }
+        }
+
+        // Buat snapshot kondisi saat ini untuk reset
+        function createSnapshot() {
+            return {
+                character: JSON.parse(JSON.stringify(gameData.character)),
+                currentDay: gameData.currentDay,
+                isAlive: gameData.isAlive,
+                npcs: JSON.parse(JSON.stringify(gameData.npcs)),
+                history: JSON.parse(JSON.stringify(gameData.history))
+            };
+        }
+
+        // Jalankan Hari
+        function runDay() {
+            if (!gameData.character) {
+                showWelcomeScreen();
+                return;
+            }
+            
+            if (!gameData.isAlive) {
+                showNotification('Karakter telah meninggal!', 'danger');
+                return;
+            }
+            
+            // Simpan snapshot sebelum hari dimulai untuk reset
+            gameData.previousDaySnapshot = createSnapshot();
+            
+            // Pastikan aktivitas harian
+            ['Makan', 'Istirahat'].forEach(activity => {
+                if (!gameData.activitiesToday.includes(activity)) {
+                    if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
+                        gameData.activitiesToday.push(activity);
+                    }
+                }
+            });
+            
+            // Event acak
+            const event = gameData.events[Math.floor(Math.random() * gameData.events.length)];
+            
+            // Cek kematian
+            if (event.effect === 'death') {
+                gameData.isAlive = false;
+                showNotification(`☄️ ${event.text} Game Over!`, 'danger');
+                showGameScreen();
+                return;
+            }
+            
+            // Terapkan efek event
+            event.effect.split(',').forEach(effect => {
+                const [stat, value] = effect.split(':');
+                const numValue = parseInt(value);
+                
+                switch(stat) {
+                    case 'energy':
+                        gameData.character.energy = Math.max(0, Math.min(100, gameData.character.energy + numValue));
+                        break;
+                    case 'money':
+                        gameData.character.money += numValue;
+                        break;
+                    case 'knowledge':
+                        gameData.character.knowledge = Math.max(0, gameData.character.knowledge + numValue);
+                        break;
+                    case 'health':
+                        gameData.character.health = Math.max(0, Math.min(100, gameData.character.health + numValue));
+                        break;
+                }
+            });
+            
+            // Terapkan aktivitas
+            gameData.activitiesToday.forEach(activity => {
+                if (activity.startsWith('Interaksi:')) {
+                    const npcName = activity.split(':')[1];
+                    const npc = gameData.npcs.find(n => n.name === npcName);
+                    if (npc && gameData.npcEffects[npcName]) {
+                        const effects = gameData.npcEffects[npcName];
+                        if (effects.money) gameData.character.money += effects.money;
+                        if (effects.energy) gameData.character.energy = Math.min(100, gameData.character.energy + effects.energy);
+                        if (effects.health) gameData.character.health = Math.min(100, gameData.character.health + effects.health);
+                        if (effects.knowledge) gameData.character.knowledge += effects.knowledge;
+                    }
+                } else if (gameData.activityEffects[activity]) {
+                    const effects = gameData.activityEffects[activity];
+                    if (effects.energy) gameData.character.energy = Math.max(0, Math.min(100, gameData.character.energy + effects.energy));
+                    if (effects.money) gameData.character.money = Math.max(0, gameData.character.money + effects.money);
+                    if (effects.knowledge) gameData.character.knowledge = Math.max(0, gameData.character.knowledge + effects.knowledge);
+                    if (effects.health) gameData.character.health = Math.max(0, Math.min(100, gameData.character.health + effects.health));
+                }
+            });
+            
+            // Kunjungan NPC acak
+            if (Math.random() < 0.4 && gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
+                const randomNpc = gameData.npcs[Math.floor(Math.random() * gameData.npcs.length)];
+                const activity = `Interaksi: ${randomNpc.name}`;
+                if (!gameData.activitiesToday.includes(activity)) {
+                    gameData.activitiesToday.push(activity);
+                }
+            }
+            
+  // Dukungan otomatis NPC (mirror dari autoNPCSupportIfNeeded di C)
+if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
+    const ibu  = gameData.npcs.find(n => n.name === 'Ibu');
+    const ayah = gameData.npcs.find(n => n.name === 'Ayah');
+
+    // Energy rendah → Ibu datang
+    if (gameData.character.energy < 20 && ibu) {
+        const act = `Interaksi: ${ibu.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+
+    // Health rendah → Ibu juga datang
+    if (gameData.character.health < 30 && ibu) {
+        const act = `Interaksi: ${ibu.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+
+    // Uang sedikit → Ayah bantu
+    if (gameData.character.money < 25 && ayah) {
+        const act = `Interaksi: ${ayah.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+}
+
+            
+            // Cek kondisi karakter
+            if (gameData.character.health <= 0) {
+                gameData.isAlive = false;
+                showNotification(`💀 Kesehatan habis! Karakter meninggal.`, 'danger');
+            }
+            
+            if (gameData.character.energy <= 0) {
+                gameData.character.health -= 10; // Kurangi kesehatan jika energi habis
+                if (gameData.character.health <= 0) {
+                    gameData.isAlive = false;
+                    showNotification(`💀 Kelelahan parah! Karakter meninggal.`, 'danger');
+                }
+            }
+            
+            // Simpan ke riwayat
+            gameData.history.push({
+                day: gameData.currentDay,
+                event: event.text,
+                activities: gameData.activitiesToday.join(', '),
+                energy: gameData.character.energy,
+                health: gameData.character.health,
+                money: gameData.character.money,
+                knowledge: gameData.character.knowledge
+            });
+            
+            // Perbarui hari
+            const dayCompleted = gameData.currentDay;
+            gameData.currentDay++;
+            gameData.activitiesToday = [];
+            
+            // Tampilkan ringkasan hari
+            const summary = `
+                📅 HARI ${dayCompleted} SELESAI!
+                
+                📢 Event: ${event.text}
+                
+                📊 Statistik Akhir:
+                ⚡ Energi: ${gameData.character.energy}/100
+                ❤️ Kesehatan: ${gameData.character.health}/100
+                💰 Uang: Rp${gameData.character.money}K
+                📚 Pengetahuan: ${gameData.character.knowledge}
+                
+                ${gameData.isAlive ? `🎉 Siap untuk Hari ${gameData.currentDay}!` : `💀 Game Over!`}
+            `;
+            
+            setTimeout(() => {
+                if (gameData.isAlive) {
+                    alert(summary);
+                    showGameScreen();
+                } else {
+                    alert(summary);
+                    showGameScreen();
+                }
+            }, 300);
+        }
+
+        function runNDays() {
+            const days = prompt('Jalankan berapa hari? (1-30)', '3');
+            if (days && !isNaN(days)) {
+                const numDays = parseInt(days);
+                if (numDays > 0 && numDays <= 30) {
+                    let daysRun = 0;
+                    
+                    function runNextDay() {
+                        if (daysRun < numDays && gameData.isAlive) {
+                            runDay();
+                            daysRun++;
+                            
+                            // Delay sebelum hari berikutnya
+                            if (daysRun < numDays && gameData.isAlive) {
+                                setTimeout(runNextDay, 500);
+                            }
+                        }
+                    }
+                    
+                    runNextDay();
+                } else {
+                    showNotification('Masukkan angka antara 1-30!', 'warning');
+                }
+            }
+        }
+
+        // Fungsi Reset Hari yang diperbaiki
+        function resetDay(fullReset = false) {
+            if (fullReset) {
+                // Reset hari ke kondisi sebelumnya (sebelum hari dijalankan)
+                if (gameData.previousDaySnapshot) {
+                    if (confirm('Reset hari ke kondisi sebelumnya? Aktivitas dan statistik akan dikembalikan ke sebelum hari dijalankan.')) {
+                        gameData.character = JSON.parse(JSON.stringify(gameData.previousDaySnapshot.character));
+                        gameData.currentDay = gameData.previousDaySnapshot.currentDay;
+                        gameData.isAlive = gameData.previousDaySnapshot.isAlive;
+                        gameData.npcs = JSON.parse(JSON.stringify(gameData.previousDaySnapshot.npcs));
+                        
+                        // Hapus riwayat hari terakhir
+                        const lastHistoryIndex = gameData.history.findIndex(h => h.day === gameData.currentDay);
+                        if (lastHistoryIndex !== -1) {
+                            gameData.history.splice(lastHistoryIndex, 1);
+                        }
+                        
+                        gameData.activitiesToday = [];
+                        gameData.previousDaySnapshot = null;
+                        
+                        showNotification('🔄 Hari berhasil direset ke kondisi sebelumnya!', 'success');
+                        showGameScreen();
+                    }
+                } else {
+                    showNotification('Tidak ada snapshot untuk reset! Jalankan hari terlebih dahulu.', 'warning');
+                }
+            } else {
+                // Hanya reset aktivitas hari ini (tidak mengubah statistik)
+                if (gameData.activitiesToday.length > 0) {
+                    if (confirm('Hapus semua aktivitas hari ini?')) {
+                        gameData.activitiesToday = [];
+                        updateActivitiesDisplay();
+                        showNotification('🗑️ Semua aktivitas hari ini dihapus!', 'info');
+                    }
+                } else {
+                    showNotification('Tidak ada aktivitas untuk dihapus.', 'info');
+                }
+            }
+        }
+
+        // Modal Riwayat
+        function showHistory() {
+            const historyContent = document.getElementById('history-content');
+            
+            if (gameData.history.length === 0) {
+                historyContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-history" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <p>Belum ada riwayat.<br>Mulai bermain untuk membuat riwayat!</p>
+                    </div>
+                `;
+            } else {
+                historyContent.innerHTML = gameData.history.slice(-15).reverse().map(record => `
+                    <div class="glass-card" style="padding: 20px; margin-bottom: 15px; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--text-primary);">
+                                <i class="fas fa-calendar-day"></i> HARI ${record.day}
+                            </h3>
+                            <div style="font-size: 12px; color: var(--text-muted);">
+                                ${record.energy}⚡ ${record.health}❤️ Rp${record.money}K 📚${record.knowledge}
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">
+                            <i class="fas fa-bullhorn"></i> ${record.event}
+                        </p>
+                        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">
+                            <i class="fas fa-tasks"></i> ${record.activities}
+                        </p>
+                        <div style="display: flex; justify-content: flex-end; gap: 5px;">
+                            <button class="history-action-btn" onclick="deleteHistoryDay(${record.day})" title="Hapus riwayat hari ini">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            showModal('history-modal');
+        }
+
+function deleteLastHistoryDay() {
+    if (gameData.history.length === 0) {
+        showNotification('Tidak ada riwayat untuk dihapus!', 'info');
+        return;
+    }
+
+    const lastIndex = gameData.history.length - 1;
+    const lastDay = gameData.history[lastIndex].day;
+
+    if (confirm(`Hapus riwayat Hari ${lastDay}?`)) {
+        gameData.history.pop(); // hapus elemen terakhir
+        showNotification(`🗑️ Riwayat Hari ${lastDay} telah dihapus!`, 'info');
+        showHistory(); // Refresh tampilan riwayat
+    }
+}
+
+        // Modal Profil
+        function showProfile() {
+            if (!gameData.character) return;
+            
+            const profileContent = document.getElementById('profile-content');
+            profileContent.innerHTML = `
+                <div class="glass-card" style="padding: 25px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <div style="font-size: 48px;">${gameData.character.jobEmoji}</div>
+                        <div>
+                            <h3 style="font-size: 24px; color: var(--text-primary);">${gameData.character.name}</h3>
+                            <p style="color: var(--text-muted);">${gameData.character.job}, ${gameData.character.age} tahun</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--gradient-primary);">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>ENERGI</h3>
+                                <div class="value">${gameData.character.energy}/100</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--gradient-success);">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>KESEHATAN</h3>
+                                <div class="value">${gameData.character.health}/100</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--gradient-warning);">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>UANG</h3>
+                                <div class="value">Rp${gameData.character.money}K</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--gradient-info);">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>PENGETAHUAN</h3>
+                                <div class="value">${gameData.character.knowledge}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="padding: 25px;">
+                    <h3 style="font-family: 'Poppins', sans-serif; margin-bottom: 20px; color: var(--text-primary);">
+                        <i class="fas fa-users"></i> HUBUNGAN DENGAN NPC
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${gameData.npcs.map(npc => `
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: var(--card-light); border-radius: 10px;">
+                                <div style="font-size: 24px;">${npc.emoji}</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span style="color: var(--text-primary);">${npc.name}</span>
+                                        <span style="color: var(--text-muted); font-size: 14px;">${npc.relationship}%</span>
+                                    </div>
+                                    <div style="width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: ${npc.relationship}%; height: 100%; background: ${npc.color}; border-radius: 3px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            showModal('profile-modal');
+        }
+
+        // Panduan
+        function showInstructions() {
+            alert(`
+                📖 PANDUAN SIM LIFE 🌟
+                
+                1. BUAT KARAKTER:
+                   • Pilih nama, usia, dan pekerjaan
+                   • Setiap pekerjaan memiliki rentang usia berbeda
+                
+                2. STATISTIK:
+                   • ⚡ Energi: Dibutuhkan untuk aktivitas
+                   • ❤️ Kesehatan: Jika habis, karakter meninggal
+                   • 💰 Uang: Untuk bertahan hidup
+                   • 📚 Pengetahuan: Menambah kemampuan
+                
+                3. AKTIVITAS:
+                   • Maksimal 5 aktivitas per hari
+                   • Pilih aktivitas sesuai pekerjaan
+                   • Pastikan ada "Makan" dan "Istirahat"
+                   • Bisa hapus aktivitas satu per satu atau semua
+                
+                4. INTERAKSI NPC:
+                   • Bangun hubungan dengan karakter lain
+                   • Setiap NPC memberikan efek berbeda
+                
+                5. EVENT ACAK:
+                   • Setiap hari ada event yang mempengaruhi statistik
+                
+                6. FITUR BARU:
+                   • RESET HARI: Kembalikan statistik ke sebelum hari dijalankan
+                   • HAPUS RIWAYAT: Hapus riwayat hari tertentu atau semua
+                   • HAPUS AKTIVITAS: Hapus aktivitas satu per satu
+                
+                7. TIPS:
+                   • Jaga energi dan kesehatan di atas 20
+                   • Interaksi dengan keluarga saat kondisi buruk
+                   • Pilih aktivitas yang seimbang
+                
+                Selamat bermain! 🎮
+            `);
+        }
+
+        // Sistem notifikasi
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            });
+            
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Atur warna berdasarkan tipe
+            switch(type) {
+                case 'success':
+                    notification.style.background = 'var(--gradient-success)';
+                    break;
+                case 'danger':
+                    notification.style.background = 'var(--gradient-danger)';
+                    break;
+                case 'warning':
+                    notification.style.background = 'var(--gradient-warning)';
+                    break;
+                default:
+                    notification.style.background = 'var(--gradient-info)';
+            }
+            
+            notification.style.color = 'white';
+            
+            // Tentukan ikon berdasarkan tipe
+            let icon = 'info-circle';
+            switch(type) {
+                case 'success': icon = 'check-circle'; break;
+                case 'danger': icon = 'exclamation-circle'; break;
+                case 'warning': icon = 'exclamation-triangle'; break;
+            }
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Hapus setelah 3 detik
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        // Inisialisasi game saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+
+</html>
