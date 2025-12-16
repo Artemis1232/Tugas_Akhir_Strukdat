@@ -1064,22 +1064,25 @@
                 }
             ],
             events: [
-                // Meteor diperkecil kemungkinannya (dipindah ke urutan akhir)
                 { text: "🌧️ Hujan deras, energi berkurang", effect: "energy:-5" },
-                { text: "💰 DISKON MEGA! Hemat uang", effect: "money:+10" },
-                { text: "🚗 KECELAKAAN! Energi habis", effect: "energy:-8" },
-                { text: "🌟 MOTIVASI BOM! Semangat naik", effect: "energy:+5,knowledge:+2" },
+                { text: "💰 MENDAPAT DISKON! Hemat uang", effect: "money:+10" },
+                { text: "🚗 KECELAKAAN! Energi habis", effect: "energy:-28" },
+                { text: "🌟 MOTIVASI NAIK! Semangat naik", effect: "energy:+5,knowledge:+2" },
                 { text: "📧 TUGAS MENDADAK! Tetap semangat", effect: "knowledge:+3,energy:-3" },
-                { text: "🎁 REJEKI NOMBOK! Hadiah tak terduga", effect: "money:+15,energy:+5" },
-                { text: "🤒 FLU MUSIMAN! Istirahat dulu", effect: "health:-5,energy:-3" },
-                { text: "💡 EUREKA MOMENT! Ide brilian", effect: "knowledge:+5" },
+                { text: "🎁 REJEKI NOMPLOK! Hadiah tak terduga", effect: "money:+15,energy:+5" },
+                { text: "🤒 FLU MUSIMAN! Istirahat dulu", effect: "health:-5,energy:-23" },
+                { text: "💡 DAPET IDE! Ide brilian", effect: "knowledge:+5" },
                 { text: "🏆 JUARA LOMBA! Prestasi gemilang", effect: "money:+25,knowledge:+3" },
                 { text: "🌞 CUACA CERAH! Mood membaik", effect: "energy:+3,health:+2" },
-                { text: "📱 TEMAN MENGINVIT! Hangout seru", effect: "energy:+4,money:-10" },
+                { text: "📱 TEMAN NGAJAK MAIN! Hangout seru", effect: "energy:+4,money:-10" },
                 { text: "🏥 CHECKUP GRATIS! Kesehatan terjaga", effect: "health:+8" },
                 { text: "💼 PROYEK BARU! Penghasilan tambahan", effect: "money:+20,energy:-6" },
                 { text: "📚 BUKU BARU! Pengetahuan bertambah", effect: "knowledge:+4" },
-                { text: "☄️ IMPAK METEOR! Tidak selamat", effect: "death" } // Hanya 1 dari 15 kemungkinan (~6.7%)
+                { text: "🎉 ULANG TAHUN! Hadiah spesial", effect: "money:+30,energy:+10,health:+5" },
+                { text: "🏋️ GYM BARU! Kesehatan meningkat", effect: "health:+10,energy:-18" },
+                { text: "🎮 GAME MARATHON! Menyenangkan tapi melelahkan", effect: "energy:-10,knowledge:+2" },
+                { text: "☕ KOPI GRATIS! Energi bertambah", effect: "energy:+8" },
+                { text: "☄️ TERKENA METEOR! Tidak selamat", effect: "death" } 
             ],
             activityEffects: {
                 "Belajar": { knowledge: 5, energy: -5 },
@@ -1699,11 +1702,9 @@
             
             // Event acak dengan kemungkinan meteor yang sangat rendah
             let event;
-            // Hanya ada 6.7% kemungkinan terkena meteor
-            if (Math.random() < 0.067) { // 6.7% chance
-                event = gameData.events[gameData.events.length - 1]; // Meteor adalah yang terakhir
+            if (Math.random() < 0.02) { 
+                event = gameData.events[gameData.events.length - 1]; 
             } else {
-                // 93.3% kemungkinan mendapatkan event normal
                 event = gameData.events[Math.floor(Math.random() * (gameData.events.length - 1))];
             }
             
@@ -1767,15 +1768,35 @@
             }
             
             // Dukungan otomatis NPC
-            if (gameData.character.energy < 20 && gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
-                const ibu = gameData.npcs.find(n => n.name === 'Ibu');
-                if (ibu) {
-                    const activity = `Interaksi: ${ibu.name}`;
-                    if (!gameData.activitiesToday.includes(activity)) {
-                        gameData.activitiesToday.push(activity);
-                    }
-                }
-            }
+if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
+    const ibu  = gameData.npcs.find(n => n.name === 'Ibu');
+    const ayah = gameData.npcs.find(n => n.name === 'Ayah');
+
+    // Energy rendah → Ibu
+    if (gameData.character.energy < 20 && ibu) {
+        const act = `Interaksi: ${ibu.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+
+    // Health rendah → Ibu
+    if (gameData.character.health < 30 && ibu) {
+        const act = `Interaksi: ${ibu.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+
+    // Uang sedikit → Ayah
+    if (gameData.character.money < 25 && ayah) {
+        const act = `Interaksi: ${ayah.name}`;
+        if (!gameData.activitiesToday.includes(act)) {
+            gameData.activitiesToday.push(act);
+        }
+    }
+}
+
             
             // Cek kondisi karakter
             if (gameData.character.health <= 0) {
@@ -2189,3 +2210,4 @@
     </script>
 </body>
 </html>
+
