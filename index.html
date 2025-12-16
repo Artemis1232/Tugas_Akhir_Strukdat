@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* CSS yang sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -754,6 +755,18 @@
             font-size: 12px;
             border-radius: 8px;
         }
+        
+        /* Input untuk jumlah hari */
+        .days-input {
+            width: 80px;
+            text-align: center;
+            margin: 0 10px;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
@@ -870,10 +883,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-                    <button class="modern-btn btn-danger btn-sm" onclick="confirmClearHistory()">
-                        <i class="fas fa-trash"></i> Hapus Semua Riwayat
-                    </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div>
+                        <button class="modern-btn btn-danger btn-sm" onclick="deleteLastHistory()" ${gameData.history.length === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                            <i class="fas fa-trash"></i> Hapus Hari Terakhir
+                        </button>
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 14px;">
+                        ${gameData.history.length} hari tercatat
+                    </div>
                 </div>
                 <div id="history-content" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
                     <!-- Riwayat akan dimuat secara dinamis -->
@@ -899,16 +917,57 @@
         </div>
     </div>
 
+    <!-- Modal Jalankan N Hari -->
+    <div class="modal" id="rundays-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-calendar"></i> Jalankan N Hari</h2>
+                <button class="close-modal" onclick="closeModal('rundays-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px 0;">
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                        Pilih jumlah hari yang ingin dijalankan:
+                    </p>
+                    
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 30px;">
+                        <button class="modern-btn btn-secondary" onclick="changeDays(-10)">-10</button>
+                        <button class="modern-btn btn-secondary" onclick="changeDays(-5)">-5</button>
+                        
+                        <div style="position: relative;">
+                            <input type="number" id="days-count" class="days-input" min="1" max="100" value="7">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">hari</div>
+                        </div>
+                        
+                        <button class="modern-btn btn-secondary" onclick="changeDays(5)">+5</button>
+                        <button class="modern-btn btn-secondary" onclick="changeDays(10)">+10</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button class="modern-btn btn-secondary" onclick="closeModal('rundays-modal')">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                        <button class="modern-btn btn-success" onclick="runSelectedDays()">
+                            <i class="fas fa-play"></i> Jalankan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
-        // Data Game - DITAMBAHKAN: snapshot untuk reset hari
+        // Data Game
         const gameData = {
             character: null,
             currentDay: 1,
             isAlive: true,
             activitiesToday: [],
             history: [],
-            previousDaySnapshot: null, // Menyimpan snapshot hari sebelumnya untuk reset
+            previousDaySnapshot: null,
             maxActivitiesPerDay: 5,
             npcs: [
                 { name: "Ayah", relationship: 70, role: "Keluarga", emoji: "👨‍👦", color: "#6366f1" },
@@ -1005,20 +1064,22 @@
                 }
             ],
             events: [
-                { text: "☄️ Terkena METEOR! Tidak selamat", effect: "death" },
-                { text: "🌧️ Hujan deras, energi berkurang", effect: "energy:-10" },
-                { text: "💰 DAPAT DISKON MEGA! Hemat uang", effect: "money:+10" },
-                { text: "🚗 KECELAKAAN! Energi habis", effect: "energy:-20,health:-20" },
-                { text: "🌟 MOTIVASI MENINGKAT! Semangat naik", effect: "energy:+5,knowledge:+2" },
+                // Meteor diperkecil kemungkinannya (dipindah ke urutan akhir)
+                { text: "🌧️ Hujan deras, energi berkurang", effect: "energy:-5" },
+                { text: "💰 DISKON MEGA! Hemat uang", effect: "money:+10" },
+                { text: "🚗 KECELAKAAN! Energi habis", effect: "energy:-8" },
+                { text: "🌟 MOTIVASI BOM! Semangat naik", effect: "energy:+5,knowledge:+2" },
                 { text: "📧 TUGAS MENDADAK! Tetap semangat", effect: "knowledge:+3,energy:-3" },
-                { text: "🎁 DAPAT REJEKI NOMPLOK! Hadiah tak terduga", effect: "money:+15,energy:+5" },
-                { text: "🤒 FLU MUSIMAN! Butuh istirahat", effect: "health:-5,energy:-3" },
+                { text: "🎁 REJEKI NOMBOK! Hadiah tak terduga", effect: "money:+15,energy:+5" },
+                { text: "🤒 FLU MUSIMAN! Istirahat dulu", effect: "health:-5,energy:-3" },
+                { text: "💡 EUREKA MOMENT! Ide brilian", effect: "knowledge:+5" },
                 { text: "🏆 JUARA LOMBA! Prestasi gemilang", effect: "money:+25,knowledge:+3" },
                 { text: "🌞 CUACA CERAH! Mood membaik", effect: "energy:+3,health:+2" },
-                { text: "📱 TEMAN MENGAJAK HANGOUT", effect: "energy:+4,money:-10" },
+                { text: "📱 TEMAN MENGINVIT! Hangout seru", effect: "energy:+4,money:-10" },
                 { text: "🏥 CHECKUP GRATIS! Kesehatan terjaga", effect: "health:+8" },
                 { text: "💼 PROYEK BARU! Penghasilan tambahan", effect: "money:+20,energy:-6" },
-                { text: "📚 BUKU BARU! Pengetahuan bertambah", effect: "knowledge:+4" }
+                { text: "📚 BUKU BARU! Pengetahuan bertambah", effect: "knowledge:+4" },
+                { text: "☄️ IMPAK METEOR! Tidak selamat", effect: "death" } // Hanya 1 dari 15 kemungkinan (~6.7%)
             ],
             activityEffects: {
                 "Belajar": { knowledge: 5, energy: -5 },
@@ -1165,7 +1226,7 @@
                     </div>
                     
                     <div style="margin-top: 40px; color: var(--text-muted); font-size: 14px;">
-                        <p><i class="fas fa-code"></i> Versi Web • v2.1 • UI Modern • Fitur Reset & Hapus Riwayat</p>
+                        <p><i class="fas fa-code"></i> Versi Web • v2.2 • Kemungkinan Meteor dikurangi • Bisa jalankan hingga 100 hari</p>
                     </div>
                 </div>
             `;
@@ -1257,7 +1318,7 @@
                                 <button class="modern-btn btn-success" onclick="runDay()">
                                     <i class="fas fa-play"></i> JALANKAN HARI
                                 </button>
-                                <button class="modern-btn btn-info" onclick="runNDays()">
+                                <button class="modern-btn btn-info" onclick="showRunDaysModal()">
                                     <i class="fas fa-calendar"></i> JALANKAN N HARI
                                 </button>
                                 <button class="modern-btn" onclick="showActivitiesModal()">
@@ -1636,8 +1697,15 @@
                 }
             });
             
-            // Event acak
-            const event = gameData.events[Math.floor(Math.random() * gameData.events.length)];
+            // Event acak dengan kemungkinan meteor yang sangat rendah
+            let event;
+            // Hanya ada 6.7% kemungkinan terkena meteor
+            if (Math.random() < 0.067) { // 6.7% chance
+                event = gameData.events[gameData.events.length - 1]; // Meteor adalah yang terakhir
+            } else {
+                // 93.3% kemungkinan mendapatkan event normal
+                event = gameData.events[Math.floor(Math.random() * (gameData.events.length - 1))];
+            }
             
             // Cek kematian
             if (event.effect === 'death') {
@@ -1698,36 +1766,16 @@
                 }
             }
             
-  // Dukungan otomatis NPC (mirror dari autoNPCSupportIfNeeded di C)
-if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
-    const ibu  = gameData.npcs.find(n => n.name === 'Ibu');
-    const ayah = gameData.npcs.find(n => n.name === 'Ayah');
-
-    // Energy rendah → Ibu datang
-    if (gameData.character.energy < 20 && ibu) {
-        const act = `Interaksi: ${ibu.name}`;
-        if (!gameData.activitiesToday.includes(act)) {
-            gameData.activitiesToday.push(act);
-        }
-    }
-
-    // Health rendah → Ibu juga datang
-    if (gameData.character.health < 30 && ibu) {
-        const act = `Interaksi: ${ibu.name}`;
-        if (!gameData.activitiesToday.includes(act)) {
-            gameData.activitiesToday.push(act);
-        }
-    }
-
-    // Uang sedikit → Ayah bantu
-    if (gameData.character.money < 25 && ayah) {
-        const act = `Interaksi: ${ayah.name}`;
-        if (!gameData.activitiesToday.includes(act)) {
-            gameData.activitiesToday.push(act);
-        }
-    }
-}
-
+            // Dukungan otomatis NPC
+            if (gameData.character.energy < 20 && gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
+                const ibu = gameData.npcs.find(n => n.name === 'Ibu');
+                if (ibu) {
+                    const activity = `Interaksi: ${ibu.name}`;
+                    if (!gameData.activitiesToday.includes(activity)) {
+                        gameData.activitiesToday.push(activity);
+                    }
+                }
+            }
             
             // Cek kondisi karakter
             if (gameData.character.health <= 0) {
@@ -1744,7 +1792,7 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
             }
             
             // Simpan ke riwayat
-            gameData.history.push({
+            const historyRecord = {
                 day: gameData.currentDay,
                 event: event.text,
                 activities: gameData.activitiesToday.join(', '),
@@ -1752,7 +1800,13 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
                 health: gameData.character.health,
                 money: gameData.character.money,
                 knowledge: gameData.character.knowledge
-            });
+            };
+            
+            gameData.history.push(historyRecord);
+            
+            // Simpan snapshot dari hasil hari ini
+            gameData.lastDaySnapshot = createSnapshot();
+            gameData.lastHistoryRecord = historyRecord;
             
             // Perbarui hari
             const dayCompleted = gameData.currentDay;
@@ -1785,30 +1839,58 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
             }, 300);
         }
 
-        function runNDays() {
-            const days = prompt('Jalankan berapa hari? (1-30)', '3');
-            if (days && !isNaN(days)) {
-                const numDays = parseInt(days);
-                if (numDays > 0 && numDays <= 30) {
-                    let daysRun = 0;
+        // Fungsi untuk modal jalankan N hari
+        function showRunDaysModal() {
+            document.getElementById('days-count').value = 7;
+            showModal('rundays-modal');
+        }
+
+        function changeDays(amount) {
+            const input = document.getElementById('days-count');
+            let currentValue = parseInt(input.value) || 1;
+            let newValue = currentValue + amount;
+            
+            // Batasi antara 1-100
+            if (newValue < 1) newValue = 1;
+            if (newValue > 100) newValue = 100;
+            
+            input.value = newValue;
+        }
+
+        function runSelectedDays() {
+            const input = document.getElementById('days-count');
+            const days = parseInt(input.value);
+            
+            if (isNaN(days) || days < 1 || days > 100) {
+                showNotification('Masukkan angka antara 1-100!', 'warning');
+                return;
+            }
+            
+            closeModal('rundays-modal');
+            
+            let daysRun = 0;
+            let originalIsAlive = gameData.isAlive;
+            
+            function runNextDay() {
+                if (daysRun < days && gameData.isAlive) {
+                    runDay();
+                    daysRun++;
                     
-                    function runNextDay() {
-                        if (daysRun < numDays && gameData.isAlive) {
-                            runDay();
-                            daysRun++;
-                            
-                            // Delay sebelum hari berikutnya
-                            if (daysRun < numDays && gameData.isAlive) {
-                                setTimeout(runNextDay, 500);
-                            }
+                    // Delay sebelum hari berikutnya
+                    if (daysRun < days && gameData.isAlive) {
+                        setTimeout(runNextDay, 300);
+                    } else {
+                        if (!gameData.isAlive && originalIsAlive) {
+                            showNotification(`⏱️ Telah berjalan ${daysRun} hari sebelum karakter meninggal.`, 'info');
+                        } else if (gameData.isAlive) {
+                            showNotification(`⏱️ Telah berjalan ${days} hari dengan sukses!`, 'success');
                         }
                     }
-                    
-                    runNextDay();
-                } else {
-                    showNotification('Masukkan angka antara 1-30!', 'warning');
                 }
             }
+            
+            showNotification(`⏱️ Mulai menjalankan ${days} hari...`, 'info');
+            setTimeout(runNextDay, 500);
         }
 
         // Fungsi Reset Hari yang diperbaiki
@@ -1823,9 +1905,8 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
                         gameData.npcs = JSON.parse(JSON.stringify(gameData.previousDaySnapshot.npcs));
                         
                         // Hapus riwayat hari terakhir
-                        const lastHistoryIndex = gameData.history.findIndex(h => h.day === gameData.currentDay);
-                        if (lastHistoryIndex !== -1) {
-                            gameData.history.splice(lastHistoryIndex, 1);
+                        if (gameData.history.length > 0) {
+                            gameData.history.pop(); // Hapus hanya yang terakhir
                         }
                         
                         gameData.activitiesToday = [];
@@ -1879,11 +1960,11 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
                         <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">
                             <i class="fas fa-tasks"></i> ${record.activities}
                         </p>
-                        <div style="display: flex; justify-content: flex-end; gap: 5px;">
-                            <button class="history-action-btn" onclick="deleteHistoryDay(${record.day})" title="Hapus riwayat hari ini">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </div>
+                        ${record.day === gameData.history[gameData.history.length - 1].day ? `
+                            <div style="position: absolute; top: 10px; right: 10px; background: var(--gradient-info); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;">
+                                TERBARU
+                            </div>
+                        ` : ''}
                     </div>
                 `).join('');
             }
@@ -1891,21 +1972,36 @@ if (gameData.activitiesToday.length < gameData.maxActivitiesPerDay) {
             showModal('history-modal');
         }
 
-function deleteLastHistoryDay() {
-    if (gameData.history.length === 0) {
-        showNotification('Tidak ada riwayat untuk dihapus!', 'info');
-        return;
-    }
-
-    const lastIndex = gameData.history.length - 1;
-    const lastDay = gameData.history[lastIndex].day;
-
-    if (confirm(`Hapus riwayat Hari ${lastDay}?`)) {
-        gameData.history.pop(); // hapus elemen terakhir
-        showNotification(`🗑️ Riwayat Hari ${lastDay} telah dihapus!`, 'info');
-        showHistory(); // Refresh tampilan riwayat
-    }
-}
+        // Fungsi untuk menghapus riwayat hari terakhir saja
+        function deleteLastHistory() {
+            if (gameData.history.length === 0) {
+                showNotification('Tidak ada riwayat untuk dihapus!', 'info');
+                return;
+            }
+            
+            const lastDay = gameData.history[gameData.history.length - 1].day;
+            
+            if (confirm(`Hapus riwayat Hari ${lastDay} (terakhir)?\n\nIni akan menghapus riwayat hari terakhir saja.`)) {
+                // Hapus riwayat terakhir
+                const deletedRecord = gameData.history.pop();
+                
+                // Reset ke kondisi sebelum hari terakhir jika ada snapshot
+                if (gameData.previousDaySnapshot) {
+                    gameData.character = JSON.parse(JSON.stringify(gameData.previousDaySnapshot.character));
+                    gameData.currentDay = gameData.previousDaySnapshot.currentDay;
+                    gameData.isAlive = gameData.previousDaySnapshot.isAlive;
+                    gameData.npcs = JSON.parse(JSON.stringify(gameData.previousDaySnapshot.npcs));
+                    gameData.previousDaySnapshot = null;
+                } else {
+                    // Jika tidak ada snapshot, kurangi currentDay
+                    gameData.currentDay = Math.max(1, gameData.currentDay - 1);
+                }
+                
+                showNotification(`🗑️ Riwayat Hari ${lastDay} telah dihapus! Hari dikembalikan ke ${gameData.currentDay}`, 'info');
+                closeModal('history-modal');
+                showGameScreen();
+            }
+        }
 
         // Modal Profil
         function showProfile() {
@@ -2018,11 +2114,12 @@ function deleteLastHistoryDay() {
                 
                 5. EVENT ACAK:
                    • Setiap hari ada event yang mempengaruhi statistik
+                   • Meteor hanya memiliki kemungkinan 6.7% per hari
                 
                 6. FITUR BARU:
-                   • RESET HARI: Kembalikan statistik ke sebelum hari dijalankan
-                   • HAPUS RIWAYAT: Hapus riwayat hari tertentu atau semua
-                   • HAPUS AKTIVITAS: Hapus aktivitas satu per satu
+                   • JALANKAN N HARI: Bisa jalankan hingga 100 hari sekaligus
+                   • HAPUS RIWAYAT: Hanya bisa hapus hari terakhir
+                   • RESET HARI: Reset ke kondisi sebelum hari dijalankan
                 
                 7. TIPS:
                    • Jaga energi dan kesehatan di atas 20
@@ -2091,5 +2188,4 @@ function deleteLastHistoryDay() {
         document.addEventListener('DOMContentLoaded', initGame);
     </script>
 </body>
-
 </html>
